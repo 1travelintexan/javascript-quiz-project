@@ -27,7 +27,9 @@ class Quiz {
   checkAnswer(answer) {
     if (answer === this.questions[this.currentQuestionIndex].answer) {
       this.correctAnswers++;
+      return true;
     }
+    return false;
   }
 
   hasEnded() {
@@ -36,5 +38,17 @@ class Quiz {
     } else {
       return true;
     }
+  }
+  filterQuestionsByDifficulty(level) {
+    if (typeof level === "number" && level >= 1 && level <= 3)
+      this.questions = this.questions.filter(
+        (oneQuestion) => oneQuestion.difficulty === level
+      );
+  }
+  averageDifficulty() {
+    return (
+      this.questions.reduce((a, b) => a + b.difficulty, 0) /
+      this.questions.length
+    );
   }
 }
