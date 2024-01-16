@@ -18,8 +18,11 @@ document.addEventListener("DOMContentLoaded", () => {
     endView.style.display = "none";
     quiz.currentQuestionIndex = 0;
     quiz.correctAnswers = 0;
+    quiz.timeRemaining = 10;
+    printTimer();
     quiz.shuffleQuestions();
     showQuestion();
+    decrementTimer();
   });
   /************  SET VISIBILITY OF VIEWS  ************/
 
@@ -52,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ),
     // Add more questions here
   ];
-  const quizDuration = 120; // 120 seconds (2 minutes)
+  const quizDuration = 10; // 120 seconds (2 minutes)
 
   /************  QUIZ INSTANCE  ************/
 
@@ -77,9 +80,27 @@ document.addEventListener("DOMContentLoaded", () => {
   showQuestion();
 
   /************  TIMER  ************/
-
+  const printTimer = () => {
+    const timeRemainingContainer = document.querySelector("#timeRemaining");
+    const minutes = Math.floor(quiz.timeRemaining / 60)
+      .toString()
+      .padStart(2, "0");
+    const seconds = (quiz.timeRemaining % 60).toString().padStart(2, "0");
+    timeRemainingContainer.innerText = `${minutes}:${seconds}`;
+  };
   let timer;
-
+  const decrementTimer = () => {
+    timer = setInterval(() => {
+      if (quiz.timeRemaining > 0) {
+        quiz.timeRemaining -= 1;
+        printTimer();
+      } else {
+        clearInterval(timer);
+        showResults();
+      }
+    }, 1000);
+  };
+  decrementTimer();
   /************  EVENT LISTENERS  ************/
 
   nextButton.addEventListener("click", nextButtonHandler);
